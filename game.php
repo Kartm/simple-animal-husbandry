@@ -1,51 +1,62 @@
 <?php
-    namespace Farmer\Animal {
-        //usage: Animal\Rabbit
-        class Rabbit {
+    namespace Farmer {
+        class ExchangeRate {
+            public $to;
+            public $rate;
 
+            public function __construct($to, $rate) {
+                $this -> to = $to;
+                $this -> rate = $rate;
+            }
         }
 
-        class Pig {
+        class Exchange {
+            private $exchangeArray = array();
 
-        }
+            public function __construct() {
+                $this -> exchangeArray = array(
+                    "Sheep" => array(new ExchangeRate("Rabbit", (double)(6)), 
+                    new ExchangeRate("Pig", (double)(1/2)), 
+                    new ExchangeRate("Dog", (double)(1))),
 
-        class Sheep {
+                    "Pig" => array(new ExchangeRate("Sheep", (double)(2)), 
+                    new ExchangeRate("Cow", (double)(1/3))),
 
-        }
+                    "Cow" => array(new ExchangeRate("Pig", (double)(3)), 
+                    new ExchangeRate("Horse", (double)(1/2))), 
+                    new ExchangeRate("BigDog", (double)(1)),
 
-        class Cow {
+                    "Horse" => array(new ExchangeRate("Cow", (double)(2))),
+                    "Dog" => array(new ExchangeRate("Sheep", (double)(1))),
+                    "BigDog" => array(new ExchangeRate("Cow", (double)(1))),
+                    "Rabbit" => array(new ExchangeRate("Sheep", (double)(1/6))),
+                );
+            }
 
-        }
-
-        class Horse {
-
-        }
-
-        class Dog {
-
-        }
-
-        class BigDog {
-
-        }
-
-        class Fox {
-
-        }
-
-        class Wolf {
-
+            function getRate($from, $to) {
+                $fromArray = $this -> exchangeArray[$from];
+                var_dump($from);
+                var_dump(sizeof($fromArray));
+                for($i = 0; $i < sizeof($fromArray); $i++) {
+                    if(strcmp($fromArray[$i] -> to, $to) == 0) {
+                        return $fromArray[$i] -> rate;
+                    }
+                }
+            }
         }
     }
 
-    /*
-    1 sheep = 6 rabbits
-    1 pig = 2 sheep
-    1 cow = 3 pigs
-    1 horse = 2 cows
-    1 dog = 1 sheep
-    1 bigdog = 1 cow
-    */
+    namespace Farmer\Animal {
+        class Rabbit {}
+        class Pig {}
+        class Sheep {}
+        class Cow {}
+        class Horse {}
+        class Dog {}
+        class BigDog {}
+        class Fox {}
+        class Wolf {}
+    }
     
     namespace Farmer\Herd {
         class Herd {
@@ -72,12 +83,12 @@
 
             private function removeAnimals($chosenObjectArray, $isRemovingChosen) {
                 $oldAnimals = $this -> animals;
-                if($isRemovingChosen == true) { //* we are removing only chosen animals
+                if($isRemovingChosen == true) { //* removing only chosen animals
                     foreach(array_keys($chosenObjectArray) as $chosen) {
                         $animalName = $this -> getAnimalName($chosen);
                         unset($this -> animals[$animalName]);
                     }
-                } else { //* we are removing everything except chosen animals
+                } else { //* removing everything except chosen animals
                     $chosenArray = [];
 
                     foreach(array_keys($chosenObjectArray) as $chosen) {
@@ -89,15 +100,13 @@
                             unset($this -> animals[$animalName]);
                         }
                     }
-
-
-                    
                 }
             }
 
             private function setAnimalAmount($animalObject, $newAmount) {
                 $animalName = $this -> getAnimalName($animalObject);
                 $newAnimal = [$animalName => $newAmount];
+
                 if($newAmount == 0) {
                     unset($this -> animals[$animalName]);
                 } else {
@@ -109,6 +118,7 @@
                 $animalName = self::getAnimalName($animalObject);
                 $oldValue = $this -> getAnimalAmount($animalName);
                 $newValue = $amount + $oldValue;
+
                 if($newValue == 0) {
                     unset($this -> animals[$animalName]);
                 } else {
@@ -118,14 +128,14 @@
             }
     
             function reproduce($animal1Object, $animal2Object) {
-                $animal1Name = $this->getAnimalName($animal1Object);
-                $animal2Name = $this->getAnimalName($animal2Object);
+                $animal1Name = $this -> getAnimalName($animal1Object);
+                $animal2Name = $this -> getAnimalName($animal2Object);
+
                 if(strcasecmp($animal1Name, $animal2Name) == 0) { //matching animals
-                    //? how many animals does the player get if he has some animals? e.g. 3 pigs in the herd and 2 on the dices
                     $this->addAnimals($animal1Object, 1);
                 } else {
-                    $totalAnimal1Amount = $this->getAnimalAmount($animal1Object) + 1;
-                    $totalAnimal2Amount = $this->getAnimalAmount($animal2Object) + 1;
+                    $totalAnimal1Amount = $this -> getAnimalAmount($animal1Object) + 1;
+                    $totalAnimal2Amount = $this -> getAnimalAmount($animal2Object) + 1;
 
                     $animal1Addition = floor($totalAnimal1Amount / 2);
                     $animal2Addition = floor($totalAnimal2Amount / 2);
@@ -137,13 +147,27 @@
             }
     
             function exchange($animal1Object, $animal2Object) {
-    
+                $exchange = new \Farmer\Exchange();
+                $animal1Name = $this -> getAnimalName($animal1Object);
+                $animal2Name = $this -> getAnimalName($animal2Object);
+
+                $rate = $exchange -> getRate($animal1Name, $animal2Name);
+
+                $animal1Amount = $this -> getAnimalAmount($animal1Object);
+
+                $animal2Amount = floor($animal1Amount * $rate);
+
+                $this -> removeAnimals([$animal1Object], true);
+
+                $this -> addAnimals($animal2Object, $animal2Amount);
             }
     
             function attack($animalObject) {
                 $animalName = $this -> getAnimalName($animalObject);
+
                 if(strcasecmp($animalName, "Fox") == 0) { //* lose all rabbits
                     $dogObject = new \Farmer\Animal\Dog;
+
                     if($this -> doesHaveAnimal($dogObject) == true) {
                         $dogAmount = $this -> getAnimalAmount($dogObject);
                         $this -> setAnimalAmount($dogObject, $dogAmount - 1);
@@ -152,6 +176,7 @@
                     }
                 } else if (strcasecmp($animalName, "Wolf") == 0) { //* lose all animals except horses and small dogs
                     $bigDogObject = new \Farmer\Animal\BigDog;
+
                     if($this -> doesHaveAnimal($bigDogObject) == true) {
                         $bigDogAmount = $this -> getAnimalAmount($bigDogObject);
                         $this -> setAnimalAmount($bigDogObject, $bigDogAmount - 1);
@@ -168,30 +193,18 @@
     }
 
     namespace {
+        use Farmer\Exchange;
         use Farmer\Animal;
         use Farmer\Herd\Herd;
 
-        
         $herd = new Herd();
         $herd->addAnimals(new Animal\Rabbit, 6);
-        $herd->addAnimals(new Animal\Pig, 1);
-        $herd->reproduce(new Animal\Rabbit, new Animal\Pig);
+        $herd->addAnimals(new Animal\Sheep, 1);
+        $herd->addAnimals(new Animal\Pig, 2);
+        $herd->exchange(new Animal\Rabbit, new Animal\Sheep);
+        $herd->exchange(new Animal\Sheep, new Animal\Pig);
+        $herd->exchange(new Animal\Pig, new Animal\Cow);
         var_dump($herd->getAnimals());
-        $herd = new Herd();
-        $herd->addAnimals(new Animal\Rabbit, 6);
-        $herd->addAnimals(new Animal\Pig, 1);
-        $herd->reproduce(new Animal\Sheep, new Animal\Pig);
-        var_dump($herd->getAnimals());
-        $herd = new Herd();
-        $herd->addAnimals(new Animal\Rabbit, 5);
-        $herd->addAnimals(new Animal\Cow, 1);
-        $herd->reproduce(new Animal\Sheep, new Animal\Pig);
-        var_dump($herd->getAnimals());
-        $herd = new Herd();
-        $herd->addAnimals(new Animal\Rabbit, 4);
-        $herd->addAnimals(new Animal\Sheep, 2);
-        $herd->addAnimals(new Animal\Horse, 1);
-        $herd->reproduce(new Animal\Pig, new Animal\Pig);
-        var_dump($herd->getAnimals());
+
     }
 ?>
