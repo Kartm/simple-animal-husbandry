@@ -51,9 +51,12 @@
         class Herd {
             private $animals = [];
 
-            private function getAnimalName($object) {
-                $temp = explode("\\", get_class($object));
-                return array_pop($temp);
+            private static function getAnimalName($object) {
+                //todo fix this
+                if(is_object($object)) { //! that's awful, but can't figure out how to fix this atm
+                    $temp = explode("\\", get_class($object));
+                    return array_pop($temp);
+                } else return $object; //! remove this later
             }
 
             private function getAnimalAmount($animalObject) {
@@ -63,15 +66,21 @@
 
             private function doesHaveAnimal($animalObject) {
                 $animalName = $this -> getAnimalName($animalObject);
-                $amount = $this -> getAnimalAmount($className);
+                $amount = $this -> getAnimalAmount($animalName);
                 return $amount > 0;
             }
 
+            private function setAnimalAmount($animalObject, $newAmount) {
+                $animalName = $this -> getAnimalName($animalObject);
+                $newAnimal = [$animalName => $newAmount];
+                $this -> animals = array_merge($this -> animals, $newAnimal);
+            }
+
             function addAnimals($animalObject, $amount) {
-                $animalName = $this->getAnimalName($animalObject);
-                $oldValue = $this->getAnimalAmount($animalName);
+                $animalName = self::getAnimalName($animalObject);
+                $oldValue = $this -> getAnimalAmount($animalName);
                 $newAnimal = [$animalName => $amount + $oldValue];
-                $this->animals = array_merge($this->animals, $newAnimal);
+                $this -> animals = array_merge($this -> animals, $newAnimal);
             }
     
             function reproduce($animal1Object, $animal2Object) {
@@ -97,12 +106,24 @@
     
             }
     
-            function attack($animalObject) { //new Animal\Fox or new Animal\Wolf
+            function attack($animalObject) {
                 $animalName = $this -> getAnimalName($animalObject);
-                if(strcasecmp($animalName, "Fox") == 0) { //lose all rabbits
-                    //todo abort if player has a small dog, then remove him
-                } else if (strcasecmp($animalName, "Wolf") == 0) { //lose all animals except horses and small dogs
-                    //todo abort if player has a big dog, then remove him
+                if(strcasecmp($animalName, "Fox") == 0) {
+                    $dogObject = new \Farmer\Animal\Dog;
+                    if($this -> doesHaveAnimal($dogObject) == true) {
+                        $dogAmount = $this -> getAnimalAmount($dogObject);
+                        $this -> setAnimalAmount($dogObject, $dogAmount - 1);
+                    } else {
+                        //todo lose all rabbits
+                    }
+                } else if (strcasecmp($animalName, "Wolf") == 0) {
+                    $bigDogObject = new \Farmer\Animal\BigDog;
+                    if($this -> doesHaveAnimal($bigDogObject) == true) {
+                        $bigDogAmount = $this -> getAnimalAmount($bigDogObject);
+                        $this -> setAnimalAmount($bigDogObject, $bigDogAmount - 1);
+                    } else {
+                        //todo lose all animals except horses and small dogs
+                    }
                 }
             }
     
@@ -120,8 +141,10 @@
         $herd = new Herd();
         $herd->addAnimals(new Animal\Rabbit, 6);
         $herd->addAnimals(new Animal\Pig, 1);
-        $herd->reproduce(new Animal\Rabbit, new Animal\Pig);
-        //var_dump($herd->doesHaveAnimal(new Animal\Pig));
-        //var_dump($herd->getAnimals());
+        $herd->addAnimals(new Animal\Dog, 1);
+        var_dump($herd->getAnimals());
+        $herd -> attack(new Animal\Fox);
+        //$herd->reproduce(new Animal\Rabbit, new Animal\Pig);
+        var_dump($herd->getAnimals());
     }
 ?>
