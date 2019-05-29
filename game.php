@@ -73,12 +73,6 @@
                 return isset($this -> animals[$animalName]) ? $this -> animals[$animalName] : 0;
             }
 
-            private function doesHaveAnimal($animalObject) {
-                $animalName = $this -> getAnimalName($animalObject);
-                $amount = $this -> getAnimalAmount($animalName);
-                return $amount > 0;
-            }
-
             private function removeAnimals($chosenObjectArray, $isRemovingChosen) {
                 $oldAnimals = $this -> animals;
                 if($isRemovingChosen == true) { //* removing only chosen animals
@@ -171,18 +165,18 @@
 
                 if(strcasecmp($animalName, "Fox") == 0) { //* lose all rabbits
                     $dogObject = new \Farmer\Animal\Dog;
-
-                    if($this -> doesHaveAnimal($dogObject) == true) {
-                        $dogAmount = $this -> getAnimalAmount($dogObject);
+                    $dogAmount = $this -> getAnimalAmount($dogObject);
+                    
+                    if($dogAmount > 0) {
                         $this -> setAnimalAmount($dogObject, $dogAmount - 1);
                     } else {
                         $this -> removeAnimals([new \Farmer\Animal\Rabbit], true);
                     }
                 } else if (strcasecmp($animalName, "Wolf") == 0) { //* lose all animals except horses and small dogs
                     $bigDogObject = new \Farmer\Animal\BigDog;
+                    $bigDogAmount = $this -> getAnimalAmount($bigDogObject);
 
-                    if($this -> doesHaveAnimal($bigDogObject) == true) {
-                        $bigDogAmount = $this -> getAnimalAmount($bigDogObject);
+                    if($bigDogAmount > 0) {
                         $this -> setAnimalAmount($bigDogObject, $bigDogAmount - 1);
                     } else {
                         $this -> removeAnimals([new \Farmer\Animal\Horse, new \Farmer\Animal\Dog], false);
@@ -230,8 +224,6 @@
         var_dump($herd->getAnimals());
         var_dump("");
 
-        //!floating points values?!?!?!?!
-        //* cow - 1
         $herd = new Herd();
         $herd->addAnimals(new Animal\Rabbit, 6);
         $herd->addAnimals(new Animal\Sheep, 1);
