@@ -70,17 +70,51 @@
                 return $amount > 0;
             }
 
+            private function removeAnimals($chosenObjectArray, $isRemovingChosen) {
+                $oldAnimals = $this -> animals;
+                if($isRemovingChosen == true) { //* we are removing only chosen animals
+                    foreach(array_keys($chosenObjectArray) as $chosen) {
+                        $animalName = $this -> getAnimalName($chosen);
+                        unset($this -> animals[$animalName]);
+                    }
+                } else { //* we are removing everything except chosen animals
+                    $chosenArray = [];
+
+                    foreach(array_keys($chosenObjectArray) as $chosen) {
+                        array_push($chosenArray, $this -> getAnimalName($chosenObjectArray[$chosen]));
+                    }
+
+                    foreach(array_keys($oldAnimals) as $animalName) { // inefficient, but I'm doing it for the sake of simplicity
+                        if(in_array($animalName, $chosenArray) == false) {
+                            unset($this -> animals[$animalName]);
+                        }
+                    }
+
+
+                    
+                }
+            }
+
             private function setAnimalAmount($animalObject, $newAmount) {
                 $animalName = $this -> getAnimalName($animalObject);
                 $newAnimal = [$animalName => $newAmount];
-                $this -> animals = array_merge($this -> animals, $newAnimal);
+                if($newAmount == 0) {
+                    unset($this -> animals[$animalName]);
+                } else {
+                    $this -> animals = array_merge($this -> animals, $newAnimal);
+                }
             }
 
             function addAnimals($animalObject, $amount) {
                 $animalName = self::getAnimalName($animalObject);
                 $oldValue = $this -> getAnimalAmount($animalName);
-                $newAnimal = [$animalName => $amount + $oldValue];
-                $this -> animals = array_merge($this -> animals, $newAnimal);
+                $newValue = $amount + $oldValue;
+                if($newValue == 0) {
+                    unset($this -> animals[$animalName]);
+                } else {
+                    $newAnimal = [$animalName => $newValue];
+                    $this -> animals = array_merge($this -> animals, $newAnimal);
+                }
             }
     
             function reproduce($animal1Object, $animal2Object) {
@@ -108,21 +142,21 @@
     
             function attack($animalObject) {
                 $animalName = $this -> getAnimalName($animalObject);
-                if(strcasecmp($animalName, "Fox") == 0) {
+                if(strcasecmp($animalName, "Fox") == 0) { //* lose all rabbits
                     $dogObject = new \Farmer\Animal\Dog;
                     if($this -> doesHaveAnimal($dogObject) == true) {
                         $dogAmount = $this -> getAnimalAmount($dogObject);
                         $this -> setAnimalAmount($dogObject, $dogAmount - 1);
                     } else {
-                        //todo lose all rabbits
+                        $this -> removeAnimals([new \Farmer\Animal\Rabbit], true);
                     }
-                } else if (strcasecmp($animalName, "Wolf") == 0) {
+                } else if (strcasecmp($animalName, "Wolf") == 0) { //* lose all animals except horses and small dogs
                     $bigDogObject = new \Farmer\Animal\BigDog;
                     if($this -> doesHaveAnimal($bigDogObject) == true) {
                         $bigDogAmount = $this -> getAnimalAmount($bigDogObject);
                         $this -> setAnimalAmount($bigDogObject, $bigDogAmount - 1);
                     } else {
-                        //todo lose all animals except horses and small dogs
+                        $this -> removeAnimals([new \Farmer\Animal\Horse, new \Farmer\Animal\Dog], false);
                     }
                 }
             }
@@ -141,10 +175,23 @@
         $herd = new Herd();
         $herd->addAnimals(new Animal\Rabbit, 6);
         $herd->addAnimals(new Animal\Pig, 1);
-        $herd->addAnimals(new Animal\Dog, 1);
+        $herd->reproduce(new Animal\Rabbit, new Animal\Pig);
         var_dump($herd->getAnimals());
-        $herd -> attack(new Animal\Fox);
-        //$herd->reproduce(new Animal\Rabbit, new Animal\Pig);
+        $herd = new Herd();
+        $herd->addAnimals(new Animal\Rabbit, 6);
+        $herd->addAnimals(new Animal\Pig, 1);
+        $herd->reproduce(new Animal\Sheep, new Animal\Pig);
+        var_dump($herd->getAnimals());
+        $herd = new Herd();
+        $herd->addAnimals(new Animal\Rabbit, 5);
+        $herd->addAnimals(new Animal\Cow, 1);
+        $herd->reproduce(new Animal\Sheep, new Animal\Pig);
+        var_dump($herd->getAnimals());
+        $herd = new Herd();
+        $herd->addAnimals(new Animal\Rabbit, 4);
+        $herd->addAnimals(new Animal\Sheep, 2);
+        $herd->addAnimals(new Animal\Horse, 1);
+        $herd->reproduce(new Animal\Pig, new Animal\Pig);
         var_dump($herd->getAnimals());
     }
 ?>
