@@ -51,35 +51,59 @@
         class Herd {
             private $animals = [];
 
-            private function getClassName($object) {
+            private function getAnimalName($object) {
                 $temp = explode("\\", get_class($object));
                 return array_pop($temp);
             }
 
-            function addAnimals($animal, $amount) {
-                $className = $this->getClassName($animal);
-                $oldValue = isset($this->animals[$className]) ? $this->animals[$className] : 0;
-                $newAnimal = [$className => $amount + $oldValue];
+            private function getAnimalAmount($animalObject) {
+                $animalName = $this -> getAnimalName($animalObject);
+                return isset($this -> animals[$animalName]) ? $this -> animals[$animalName] : 0;
+            }
+
+            private function doesHaveAnimal($animalObject) {
+                $animalName = $this -> getAnimalName($animalObject);
+                $amount = $this -> getAnimalAmount($className);
+                return $amount > 0;
+            }
+
+            function addAnimals($animalObject, $amount) {
+                $animalName = $this->getAnimalName($animalObject);
+                $oldValue = $this->getAnimalAmount($animalName);
+                $newAnimal = [$animalName => $amount + $oldValue];
                 $this->animals = array_merge($this->animals, $newAnimal);
             }
     
             function reproduce($animal1Object, $animal2Object) {
-                $animal1 = $this->getClassName($animal1Object);
-                $animal2 = $this->getClassName($animal2Object);
-                if(strcasecmp($animal1, $animal2) == 0) { //match
-
+                $animal1Name = $this->getAnimalName($animal1Object);
+                $animal2Name = $this->getAnimalName($animal2Object);
+                if(strcasecmp($animal1Name, $animal2Name) == 0) { //matching animals
+                    //? how many animals does the player get if he has some animals? e.g. 3 pigs in the herd and 2 on the dices
+                    $this->addAnimals($animal1Object, 1);
                 } else {
+                    $totalAnimal1Amount = $this->getAnimalAmount($animal1Object) + 1;
+                    $totalAnimal2Amount = $this->getAnimalAmount($animal2Object) + 1;
 
+                    $animal1Addition = floor($totalAnimal1Amount / 2);
+                    $animal2Addition = floor($totalAnimal2Amount / 2);
+
+                    $this -> addAnimals($animal1Object, $animal1Addition);
+                    $this -> addAnimals($animal2Object, $animal2Addition);
                 }
                 return;
             }
     
-            function exchange($animal1, $animal2) {
+            function exchange($animal1Object, $animal2Object) {
     
             }
     
-            function attack($animal) { //new Animal\Fox or new Animal\Wolf
-    
+            function attack($animalObject) { //new Animal\Fox or new Animal\Wolf
+                $animalName = $this -> getAnimalName($animalObject);
+                if(strcasecmp($animalName, "Fox") == 0) { //lose all rabbits
+                    //todo abort if player has a small dog, then remove him
+                } else if (strcasecmp($animalName, "Wolf") == 0) { //lose all animals except horses and small dogs
+                    //todo abort if player has a big dog, then remove him
+                }
             }
     
             function getAnimals() {
@@ -97,6 +121,7 @@
         $herd->addAnimals(new Animal\Rabbit, 6);
         $herd->addAnimals(new Animal\Pig, 1);
         $herd->reproduce(new Animal\Rabbit, new Animal\Pig);
-        var_dump($herd->getAnimals());
+        //var_dump($herd->doesHaveAnimal(new Animal\Pig));
+        //var_dump($herd->getAnimals());
     }
 ?>
