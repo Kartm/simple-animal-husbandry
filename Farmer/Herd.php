@@ -40,19 +40,17 @@ namespace Farmer\Herd {
             return;
         }
 
-        //todo fix this method
         public function exchange($animal1, $animal2)
         {
             $rate = $animal1 -> exchangeArray[(string)$animal2];
-
             if ($rate >= (double)(1)) {
                 $rate = (int)$rate;
                 $this -> addAnimals($animal1, -1);
                 $this -> addAnimals($animal2, $rate);
             } else {
                 $rate = (int)round(1/$rate);
-                $this -> addAnimals($animal1, 1);
-                $this -> addAnimals($animal2, (-1) * $rate);
+                $this -> addAnimals($animal1, (-1) * $rate);
+                $this -> addAnimals($animal2, 1);
                 
             }
         }

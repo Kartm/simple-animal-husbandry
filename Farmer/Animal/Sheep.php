@@ -7,7 +7,8 @@ namespace Farmer\Animal {
         public function __construct($initializeExchange = true) 
         {
             if ($initializeExchange == true) {
-                $this -> exchangeArray = array(new \Farmer\Animal\Rabbit(false) => (double)(6));
+                $this -> exchangeArray = array((string)new \Farmer\Animal\Rabbit(false) => (double)(6),
+                (string)new \Farmer\Animal\Pig(false) => (double)(1/2));
             }
         }
     }
