@@ -4,9 +4,11 @@ namespace Farmer\Animal {
     {
         public $exchangeArray = array();
 
-        public function __construct()
+        public function __construct($initializeExchange = true) 
         {
-            $this -> exchangeArray = array("Cow" => (double)(2));
+            if ($initializeExchange == true) {
+                $this -> exchangeArray = array(spl_object_hash(new \Farmer\Animal\Cow(false)) => (double)(2));
+            }
         }
     }
 }

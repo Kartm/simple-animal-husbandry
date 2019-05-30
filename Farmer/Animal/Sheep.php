@@ -4,11 +4,11 @@ namespace Farmer\Animal {
     {
         public $exchangeArray = array();
 
-        public function __construct()
+        public function __construct($initializeExchange = true) 
         {
-            $this -> exchangeArray = array("Rabbit" => (double)(6),
-            "Pig" => (double)(1/2),
-            "Dog" => (double)(1));
+            if ($initializeExchange == true) {
+                $this -> exchangeArray = array(spl_object_hash(new \Farmer\Animal\Rabbit(false)) => (double)(6));
+            }
         }
     }
 }

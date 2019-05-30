@@ -4,16 +4,10 @@ namespace Farmer\Herd {
     {
         private $animals = [];
 
-        private static function getAnimalName($object)
+        private function getAnimalAmount($animal)
         {
-            $temp = explode("\\", get_class($object));
-            return array_pop($temp);
-        }
-
-        private function getAnimalAmount($animalObject)
-        {
-            $animalName = $this -> getAnimalName($animalObject);
-            return isset($this -> animals[$animalName]) ? $this -> animals[$animalName] : 0;
+            $animalHash = spl_object_hash($animal);
+            return isset($this -> animals[$animalHash]) ? $this -> animals[$animalHash] : 0;
         }
 
         private function removeAnimals($chosenObjectArray, $isRemovingChosen)
@@ -30,7 +24,6 @@ namespace Farmer\Herd {
                     array_push($chosenArray, $this -> getAnimalName($chosenObjectArray[$chosen]));
                 }
                 
-
                 foreach (array_keys($oldAnimals) as $animalName) {
                     if (in_array($animalName, $chosenArray) == false) {
                         unset($this -> animals[$animalName]);
@@ -39,76 +32,68 @@ namespace Farmer\Herd {
             }
         }
 
-        private function setAnimalAmount($animalObject, $newAmount)
+        private function setAnimalAmount($animal, $newAmount)
         {
-            $animalName = $this -> getAnimalName($animalObject);
-            $newAnimal = [$animalName => $newAmount];
+            $animalHash = spl_object_hash($animal);
+            $newAnimal = [$animalHash => $newAmount];
 
             if ($newAmount == 0) {
-                unset($this -> animals[$animalName]);
+                unset($this -> animals[$animalHash]);
             } else {
                 $this -> animals = array_merge($this -> animals, $newAnimal);
             }
         }
 
-        public function addAnimals($animalObject, $amount)
+        public function addAnimals($animal, $amount)
         {
-            $animalName = self::getAnimalName($animalObject);
-            $oldValue = $this -> getAnimalAmount($animalObject);
+            $animalHash = spl_object_hash($animal);
+            $oldValue = $this -> getAnimalAmount($animal);
             $newValue = $amount + $oldValue;
 
             if ($newValue == 0) {
-                unset($this -> animals[$animalName]);
+                unset($this -> animals[$animalHash]);
             } else {
-                $newAnimal = [$animalName => $newValue];
+                $newAnimal = [$animalHash => $newValue];
                 $this -> animals = array_merge($this -> animals, $newAnimal);
             }
         }
 
-        public function reproduce($animal1Object, $animal2Object)
+        public function reproduce($animal1, $animal2)
         {
-            $animal1Name = $this -> getAnimalName($animal1Object);
-            $animal2Name = $this -> getAnimalName($animal2Object);
-
-            if (strcasecmp($animal1Name, $animal2Name) == 0) { //matching animals
-                $this->addAnimals($animal1Object, 1);
+            if (strcasecmp(spl_object_hash($animal1), spl_object_hash($animal2)) == 0) { //matching animals
+                $this->addAnimals($animal1, 1);
             } else {
-                $totalAnimal1Amount = $this -> getAnimalAmount($animal1Object) + 1;
-                $totalAnimal2Amount = $this -> getAnimalAmount($animal2Object) + 1;
+                $totalAnimal1Amount = $this -> getAnimalAmount($animal1) + 1;
+                $totalAnimal2Amount = $this -> getAnimalAmount($animal2) + 1;
 
                 $animal1Addition = (int)floor($totalAnimal1Amount / 2);
                 $animal2Addition = (int)floor($totalAnimal2Amount / 2);
 
-                $this -> addAnimals($animal1Object, $animal1Addition);
-                $this -> addAnimals($animal2Object, $animal2Addition);
+                $this -> addAnimals($animal1, $animal1Addition);
+                $this -> addAnimals($animal2, $animal2Addition);
             }
             return;
         }
 
-        public function exchange($animal1Object, $animal2Object)
+        public function exchange($animal1, $animal2)
         {
-            $animal1Name = $this -> getAnimalName($animal1Object);
-            $animal2Name = $this -> getAnimalName($animal2Object);
+            $rate = $animal1 -> exchangeArray[spl_object_hash($animal2)];
 
-            $rate = $animal1Object -> exchangeArray[$animal2Name];
-
-            $animal1Amount = $this -> getAnimalAmount($animal1Object);
-            $animal2Amount = $this -> getAnimalAmount($animal2Object);
-
-            if ($rate > 1) {
+            if ($rate >= (double)(1)) {
                 $rate = (int)$rate;
-                $this -> setAnimalAmount($animal1Object, $animal1Amount - 1);
-                $this -> addAnimals($animal2Object, $rate);
+                $this -> addAnimals($animal1, -1);
+                $this -> addAnimals($animal2, $rate);
             } else {
                 $rate = (int)round(1/$rate);
-                $this -> setAnimalAmount($animal1Object, $animal1Amount - $rate);
-                $this -> addAnimals($animal2Object, 1);
+                $this -> addAnimals($animal1, 1);
+                $this -> addAnimals($animal2, (-1) * $rate);
+                
             }
         }
 
-        public function attack($animalObject)
+        public function attack($animal)
         {
-            switch ($animalObject) {
+            switch ($animal) {
                 case new \Farmer\Animal\Fox: { //* lose all rabbits
                     $dogObject = new \Farmer\Animal\Dog;
                     $dogAmount = $this -> getAnimalAmount($dogObject);
