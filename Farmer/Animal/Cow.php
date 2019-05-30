@@ -1,6 +1,6 @@
 <?php
 namespace Farmer\Animal {
-    class Cow  extends Animal
+    class Cow  extends \Farmer\Animal\Animal
     {
         public $exchangeArray = array();
 

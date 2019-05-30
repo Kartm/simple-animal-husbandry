@@ -1,6 +1,6 @@
 <?php
 namespace Farmer\Animal {
-    class Wolf extends Animal
+    class Wolf extends \Farmer\Animal\Animal
     {
         //* if there is a big dog, abort and remove him
         //* lose all animals except horses and small dogs

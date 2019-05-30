@@ -18,7 +18,7 @@ namespace {
     $herd = new Herd();
     $herd->addAnimals(new Animal\Dog, 6);
     // $herd->addAnimals(new Animal\Pig, 1);
-    // $herd->attack(new Animal\Fox);
+    $herd->attack(new Animal\Fox);
     var_dump($herd->getAnimals());
 
     // $herd = new Herd();

@@ -5,12 +5,12 @@ namespace Farmer\Herd {
     {
         private $animals = array();
 
-        private function getAnimalAmount($animal)
+        public function getAnimalAmount($animal)
         {
             return $this -> animals[(string)$animal] ?? 0;
         }
 
-        private function setAnimalAmount($animal, $amount)
+        public function setAnimalAmount($animal, $amount)
         {
             $this -> animals[(string)$animal] = $amount;
         }
