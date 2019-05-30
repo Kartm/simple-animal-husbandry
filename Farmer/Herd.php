@@ -108,25 +108,28 @@ namespace Farmer\Herd {
 
         public function attack($animalObject)
         {
-            $animalName = $this -> getAnimalName($animalObject);
-
-            if (strcasecmp($animalName, "Fox") == 0) { //* lose all rabbits
-                $dogObject = new \Farmer\Animal\Dog;
-                $dogAmount = $this -> getAnimalAmount($dogObject);
-                
-                if ($dogAmount > 0) {
-                    $this -> setAnimalAmount($dogObject, $dogAmount - 1);
-                } else {
-                    $this -> removeAnimals([new \Farmer\Animal\Rabbit], true);
+            switch ($animalObject) {
+                case new \Farmer\Animal\Fox: { //* lose all rabbits
+                    $dogObject = new \Farmer\Animal\Dog;
+                    $dogAmount = $this -> getAnimalAmount($dogObject);
+                    
+                    if ($dogAmount > 0) {
+                        $this -> setAnimalAmount($dogObject, $dogAmount - 1);
+                    } else {
+                        $this -> removeAnimals([new \Farmer\Animal\Rabbit], true);
+                    }
+                    break;
                 }
-            } elseif (strcasecmp($animalName, "Wolf") == 0) { //* lose all animals except horses and small dogs
-                $bigDogObject = new \Farmer\Animal\BigDog;
-                $bigDogAmount = $this -> getAnimalAmount($bigDogObject);
+                case new \Farmer\Animal\Wolf: { //* lose all animals except horses and small dogs
+                    $bigDogObject = new \Farmer\Animal\BigDog;
+                    $bigDogAmount = $this -> getAnimalAmount($bigDogObject);
 
-                if ($bigDogAmount > 0) {
-                    $this -> setAnimalAmount($bigDogObject, $bigDogAmount - 1);
-                } else {
-                    $this -> removeAnimals([new \Farmer\Animal\Horse, new \Farmer\Animal\Dog], false);
+                    if ($bigDogAmount > 0) {
+                        $this -> setAnimalAmount($bigDogObject, $bigDogAmount - 1);
+                    } else {
+                        $this -> removeAnimals([new \Farmer\Animal\Horse, new \Farmer\Animal\Dog], false);
+                    }
+                    break;
                 }
             }
         }
