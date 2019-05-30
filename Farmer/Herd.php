@@ -1,67 +1,32 @@
 <?php
 namespace Farmer\Herd {
+    require_once 'vendor/autoload.php';
     class Herd
     {
-        private $animals = [];
+        private $animals = array();
 
         private function getAnimalAmount($animal)
         {
-            $animalHash = spl_object_hash($animal);
-            return isset($this -> animals[$animalHash]) ? $this -> animals[$animalHash] : 0;
+            return $this -> animals[(string)$animal] ?? 0;
         }
 
-        private function removeAnimals($chosenObjectArray, $isRemovingChosen)
+        private function setAnimalAmount($animal, $amount)
         {
-            $oldAnimals = $this -> animals;
-            if ($isRemovingChosen == true) { //* removing only chosen animals
-                foreach (array_values($chosenObjectArray) as $chosen) {
-                    $animalName = $this -> getAnimalName($chosen);
-                    unset($this -> animals[$animalName]);
-                }
-            } else { //* removing everything except chosen animals
-                $chosenArray = [];
-                foreach (array_keys($chosenObjectArray) as $chosen) {
-                    array_push($chosenArray, $this -> getAnimalName($chosenObjectArray[$chosen]));
-                }
-                
-                foreach (array_keys($oldAnimals) as $animalName) {
-                    if (in_array($animalName, $chosenArray) == false) {
-                        unset($this -> animals[$animalName]);
-                    }
-                }
-            }
-        }
-
-        private function setAnimalAmount($animal, $newAmount)
-        {
-            $animalHash = spl_object_hash($animal);
-            $newAnimal = [$animalHash => $newAmount];
-
-            if ($newAmount == 0) {
-                unset($this -> animals[$animalHash]);
-            } else {
-                $this -> animals = array_merge($this -> animals, $newAnimal);
-            }
+            $this -> animals[(string)$animal] = $amount;
         }
 
         public function addAnimals($animal, $amount)
         {
-            $animalHash = spl_object_hash($animal);
-            $oldValue = $this -> getAnimalAmount($animal);
-            $newValue = $amount + $oldValue;
+            $oldAmount = $this -> getAnimalAmount($animal);
+            $newAmount = $amount + $oldAmount;
 
-            if ($newValue == 0) {
-                unset($this -> animals[$animalHash]);
-            } else {
-                $newAnimal = [$animalHash => $newValue];
-                $this -> animals = array_merge($this -> animals, $newAnimal);
-            }
+            $this -> setAnimalAmount($animal, $newAmount);
         }
 
         public function reproduce($animal1, $animal2)
         {
-            if (strcasecmp(spl_object_hash($animal1), spl_object_hash($animal2)) == 0) { //matching animals
-                $this->addAnimals($animal1, 1);
+            if ($animal1 == $animal2) { //matching animals
+                $this -> addAnimals($animal1, 1);
             } else {
                 $totalAnimal1Amount = $this -> getAnimalAmount($animal1) + 1;
                 $totalAnimal2Amount = $this -> getAnimalAmount($animal2) + 1;
@@ -75,9 +40,10 @@ namespace Farmer\Herd {
             return;
         }
 
+        //todo fix this method
         public function exchange($animal1, $animal2)
         {
-            $rate = $animal1 -> exchangeArray[spl_object_hash($animal2)];
+            $rate = $animal1 -> exchangeArray[(string)$animal2];
 
             if ($rate >= (double)(1)) {
                 $rate = (int)$rate;
@@ -93,27 +59,13 @@ namespace Farmer\Herd {
 
         public function attack($animal)
         {
-            switch ($animal) {
-                case new \Farmer\Animal\Fox: { //* lose all rabbits
-                    $dogObject = new \Farmer\Animal\Dog;
-                    $dogAmount = $this -> getAnimalAmount($dogObject);
-                    
-                    if ($dogAmount > 0) {
-                        $this -> setAnimalAmount($dogObject, $dogAmount - 1);
-                    } else {
-                        $this -> removeAnimals([new \Farmer\Animal\Rabbit], true);
-                    }
+            switch ((string)$animal) {
+                case (string)new \Farmer\Animal\Fox: { 
+                    $this -> animals = \Farmer\Animal\Fox::action($this);
                     break;
                 }
-                case new \Farmer\Animal\Wolf: { //* lose all animals except horses and small dogs
-                    $bigDogObject = new \Farmer\Animal\BigDog;
-                    $bigDogAmount = $this -> getAnimalAmount($bigDogObject);
-
-                    if ($bigDogAmount > 0) {
-                        $this -> setAnimalAmount($bigDogObject, $bigDogAmount - 1);
-                    } else {
-                        $this -> removeAnimals([new \Farmer\Animal\Horse, new \Farmer\Animal\Dog], false);
-                    }
+                case (string)new \Farmer\Animal\Wolf: { 
+                    $this -> animals = \Farmer\Animal\Wolf::action($this);
                     break;
                 }
             }
@@ -121,7 +73,7 @@ namespace Farmer\Herd {
 
         public function getAnimals()
         {
-            return $this->animals;
+            return $this -> animals;
         }
     }
 }

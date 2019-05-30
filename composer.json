@@ -1,0 +1,10 @@
+{
+    "name": "arach/simple-animal-husbandry",
+    "authors": [
+        {
+            "name": "Kartm",
+            "email": "lblachnicki@gmail.com"
+        }
+    ],
+    "require": {}
+}

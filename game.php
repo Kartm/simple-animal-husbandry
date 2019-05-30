@@ -15,6 +15,12 @@ namespace {
     use Farmer\Animal;
     use Farmer\Herd\Herd;
 
+    $herd = new Herd();
+    $herd->addAnimals(new Animal\Dog, 6);
+    // $herd->addAnimals(new Animal\Pig, 1);
+    // $herd->attack(new Animal\Fox);
+    var_dump($herd->getAnimals());
+
     // $herd = new Herd();
     // $herd->addAnimals(new Animal\Rabbit, 6);
     // $herd->addAnimals(new Animal\Pig, 1);
@@ -44,8 +50,6 @@ namespace {
     // var_dump($herd->getAnimals());
     // var_dump("");
 
-    $test = new Animal\Rabbit;
-
     //! exchange is broken
 
     //! Cow - 1
@@ -62,13 +66,13 @@ namespace {
     //! Cow - 1
     //! Pig - 2
     //! Sheep - 2
-    $herd = new Herd();
-    $herd->addAnimals(new Animal\Horse, 1);
-    $herd->exchange(new Animal\Horse, new Animal\Cow);
-    $herd->exchange(new Animal\Cow, new Animal\Pig);
-    $herd->exchange(new Animal\Pig, new Animal\Sheep);
-    var_dump($herd->getAnimals());
-    var_dump("");
+    // $herd = new Herd();
+    // $herd->addAnimals(new Animal\Horse, 1);
+    // $herd->exchange(new Animal\Horse, new Animal\Cow);
+    // $herd->exchange(new Animal\Cow, new Animal\Pig);
+    // $herd->exchange(new Animal\Pig, new Animal\Sheep);
+    // var_dump($herd->getAnimals());
+    // var_dump("");
 
     // $herd = new Herd();
     // $herd->addAnimals(new Animal\Rabbit, 6);
