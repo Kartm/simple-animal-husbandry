@@ -61,11 +61,8 @@
             private $animals = [];
 
             private static function getAnimalName($object) {
-                //todo fix this
-                if(is_object($object)) { //! that's awful, but can't figure out how to fix this atm
-                    $temp = explode("\\", get_class($object));
-                    return array_pop($temp);
-                } else return $object; //! remove this later
+                $temp = explode("\\", get_class($object));
+                return array_pop($temp);
             }
 
             private function getAnimalAmount($animalObject) {
@@ -77,7 +74,6 @@
                 $oldAnimals = $this -> animals;
                 if($isRemovingChosen == true) { //* removing only chosen animals
                     foreach(array_values($chosenObjectArray) as $chosen) {
-                        
                         $animalName = $this -> getAnimalName($chosen);
                         unset($this -> animals[$animalName]);
                     }
@@ -109,7 +105,7 @@
 
             function addAnimals($animalObject, $amount) {
                 $animalName = self::getAnimalName($animalObject);
-                $oldValue = $this -> getAnimalAmount($animalName);
+                $oldValue = $this -> getAnimalAmount($animalObject);
                 $newValue = $amount + $oldValue;
 
                 if($newValue == 0) {
@@ -194,7 +190,7 @@
         use Farmer\Exchange;
         use Farmer\Animal;
         use Farmer\Herd\Herd;
-
+        
         $herd = new Herd();
         $herd->addAnimals(new Animal\Rabbit, 6);
         $herd->addAnimals(new Animal\Pig, 1);
