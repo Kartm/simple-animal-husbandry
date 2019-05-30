@@ -76,8 +76,8 @@ namespace Farmer\Herd {
                 $totalAnimal1Amount = $this -> getAnimalAmount($animal1Object) + 1;
                 $totalAnimal2Amount = $this -> getAnimalAmount($animal2Object) + 1;
 
-                $animal1Addition = floor($totalAnimal1Amount / 2);
-                $animal2Addition = floor($totalAnimal2Amount / 2);
+                $animal1Addition = (int)floor($totalAnimal1Amount / 2);
+                $animal2Addition = (int)floor($totalAnimal2Amount / 2);
 
                 $this -> addAnimals($animal1Object, $animal1Addition);
                 $this -> addAnimals($animal2Object, $animal2Addition);
