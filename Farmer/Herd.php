@@ -96,10 +96,11 @@ namespace Farmer\Herd {
             $animal2Amount = $this -> getAnimalAmount($animal2Object);
 
             if ($rate > 1) {
+                $rate = (int)$rate;
                 $this -> setAnimalAmount($animal1Object, $animal1Amount - 1);
                 $this -> addAnimals($animal2Object, $rate);
             } else {
-                $rate = round(1/$rate);
+                $rate = (int)round(1/$rate);
                 $this -> setAnimalAmount($animal1Object, $animal1Amount - $rate);
                 $this -> addAnimals($animal2Object, 1);
             }
