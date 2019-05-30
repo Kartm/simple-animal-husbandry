@@ -87,11 +87,10 @@ namespace Farmer\Herd {
 
         public function exchange($animal1Object, $animal2Object)
         {
-            $exchange = new \Farmer\Exchange();
             $animal1Name = $this -> getAnimalName($animal1Object);
             $animal2Name = $this -> getAnimalName($animal2Object);
 
-            $rate = $exchange -> getRate($animal1Name, $animal2Name);
+            $rate = $animal1Object -> exchangeArray[$animal2Name];
 
             $animal1Amount = $this -> getAnimalAmount($animal1Object);
             $animal2Amount = $this -> getAnimalAmount($animal2Object);

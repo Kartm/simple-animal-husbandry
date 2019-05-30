@@ -12,7 +12,6 @@ namespace {
         }
     });
 
-    use Farmer\Exchange;
     use Farmer\Animal;
     use Farmer\Herd\Herd;
     
