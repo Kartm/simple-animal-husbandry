@@ -55,6 +55,10 @@ namespace Farmer\Herd {
             }
         }
 
+        //todo move attack logic here
+        //todo make animals have informations and features
+        //todo ensure: THIS CLASS IS RESPONSIBLE FOR ALL RELATIONS AND INTERACTIONS
+
         public function attack($animal)
         {
             switch ((string)$animal) {
