@@ -15,6 +15,11 @@ namespace {
     use Farmer\Animal;
     use Farmer\Herd\Herd;
 
+    $herd = new Herd();
+    $herd->addAnimals(new Animal\Rabbit, 6);
+    $herd->exchange(new Animal\Rabbit, new Animal\Sheep);
+    var_dump($herd->getAnimals());
+
     // $herd = new Herd();
     // $herd->addAnimals(new Animal\Rabbit, 6);
     // $herd->addAnimals(new Animal\Pig, 1);

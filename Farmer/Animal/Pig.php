@@ -2,14 +2,11 @@
 namespace Farmer\Animal {
     class Pig  extends \Farmer\Animal\Animal
     {
-        public $exchangeArray = array();
-
-        public function __construct($initializeExchange = true) 
+        public function __construct() 
         {
-            if ($initializeExchange == true) {
-                $this -> exchangeArray = array((string)new \Farmer\Animal\Sheep(false) => (double)(2),
-                (string)new \Farmer\Animal\Cow(false) => (double)(1/3));
-            }
+            $exchangeArray = array(\Farmer\Animal\Sheep::class => (double)(2),
+            \Farmer\Animal\Cow::class => (double)(1/3));
+            parent::__construct($exchangeArray);
         }
     }
 }

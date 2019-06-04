@@ -2,13 +2,10 @@
 namespace Farmer\Animal {
     class Rabbit extends \Farmer\Animal\Animal
     {
-        public $exchangeArray = array();
-
-        public function __construct($initializeExchange = true) 
+        public function __construct() 
         {
-            if ($initializeExchange == true) {
-                $this -> exchangeArray = array((string)new \Farmer\Animal\Sheep(false) => (double)(1/6));
-            }
+            $exchangeArray = array(\Farmer\Animal\Sheep::class => (double)(1/6));
+            parent::__construct($exchangeArray);
         }
     }
 }
