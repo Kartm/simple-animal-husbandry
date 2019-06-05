@@ -2,6 +2,7 @@
 namespace Farmer\Animal {
     class Cow  extends \Farmer\Animal\Animal
     {
+        //todo make it more intuitive
         public function __construct() 
         {
             $exchangeArray = array(\Farmer\Animal\Pig::class => (double)(3),

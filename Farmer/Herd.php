@@ -55,11 +55,6 @@ namespace Farmer\Herd {
             }
         }
 
-        //todo move attack logic here
-        //todo make animals have informations and features
-        //todo ensure: THIS CLASS IS RESPONSIBLE FOR ALL RELATIONS AND INTERACTIONS
-
-        //todo if returns null, move on
         private function getDefenderAgainst($predator)
         {
             foreach ($this -> animals as $animal => $amount) {
@@ -67,7 +62,6 @@ namespace Farmer\Herd {
                     $className = "\Farmer\Animal\\".$animal;
                     $animalObject = new $className;
                     if($animalObject instanceof \Farmer\Animal\Watchdog) {
-                        //todo and in defendAgainst
                         if(in_array((string)$predator, $animalObject -> defendAgainst)) {
                             return $animal;
                         }
@@ -75,10 +69,9 @@ namespace Farmer\Herd {
                     }
                 }
             }
-            return false;
+            return null;
         }
 
-        //todo you better come up with a better name
         private function predatorAction($predator): void
         {
             foreach ($predator -> getTargetAnimals() as $key => $value) {
@@ -92,7 +85,7 @@ namespace Farmer\Herd {
         public function attack($predator)
         {
             $defender = $this -> getDefenderAgainst($predator);
-            if($defender === false) {
+            if($defender === null) {
                 $this -> predatorAction($predator);
             } else {
                 $this -> addAnimals($defender, -1);
