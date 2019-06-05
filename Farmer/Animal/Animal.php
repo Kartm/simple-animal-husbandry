@@ -2,31 +2,31 @@
 namespace Farmer\Animal {
     class Animal
     {    
-        //todo should I create a boolean here? 
+        public $exchangeArray = array();
+        public $reproductionArray = array();
+
+        protected function unqualifyClassName($className) {
+            $className = explode('\\', $className);
+            return end($className);
+        }
+
         protected function unqualifyArray($array) 
         {
-            if($array === null) return $array;
             $result = array();
             foreach ($array as $key => $value) {
-                $key = explode('\\', $key);
-                $key = end($key);
-                $value = explode('\\', $value);
-                $value = end($value);
+                $key = $this -> unqualifyClassName($key);
+                $value = $this -> unqualifyClassName($value);
                 $result[$key] = $value;
             }
             return $result;
         }
 
-        public $exchangeArray = array();
-
-        public function __construct($exchangeArray = null) 
+        public function __construct($exchangeArray = array(), $additionalReproductionArray = array()) 
         {
             $this -> exchangeArray = $this -> unqualifyArray($exchangeArray);
-        }
-
-        public function getName()
-        {
-            return $this -> __toString();
+            $reproductionArray = array(get_class($this) => 1);
+            $reproductionArray = array_merge($reproductionArray, $additionalReproductionArray);
+            $this -> reproductionArray = $this -> unqualifyArray($reproductionArray);
         }
 
         public function __toString() 
