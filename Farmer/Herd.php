@@ -25,14 +25,14 @@ namespace Farmer\Herd {
 
         public function reproduce($animal1, $animal2)
         {
-            $reproductionAmount = null;
+            $reproductionOutcome = null;
             $reproductionArray = $animal2 -> getReproductionArray();
             if (array_key_exists((string)$animal1, $reproductionArray)) {
-                $reproductionAmount = $reproductionArray[(string)$animal1];
+                $reproductionOutcome = $reproductionArray[(string)$animal1];
             }
 
-            if ($reproductionAmount !== null) {
-                $this -> addAnimals($animal1, $reproductionAmount);
+            if ($reproductionOutcome !== null) {
+                $this -> addAnimals($animal1, $reproductionOutcome);
             } else {
                 $totalAnimal1Amount = $this -> getAnimalAmount($animal1) + 1;
                 $totalAnimal2Amount = $this -> getAnimalAmount($animal2) + 1;
