@@ -1,6 +1,6 @@
 <?php
 namespace Farmer {
-    class ClassHelpers
+    class ArrayHelpers
     {    
         public static function unqualifyClassName($className) {
             $className = explode('\\', $className);

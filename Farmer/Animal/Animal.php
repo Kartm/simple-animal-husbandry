@@ -1,6 +1,6 @@
 <?php
 namespace Farmer\Animal {
-    use \Farmer\ClassHelpers;
+    use \Farmer\ArrayHelpers;
     class Animal
     {    
         public $exchangeArray = array();
@@ -8,10 +8,10 @@ namespace Farmer\Animal {
 
         public function __construct($exchangeArray = array(), $additionalReproductionArray = array()) 
         {
-            $this -> exchangeArray = ClassHelpers::unqualifyArray($exchangeArray);
+            $this -> exchangeArray = ArrayHelpers::unqualifyArray($exchangeArray);
             $reproductionArray = array(get_class($this) => 1);
             $reproductionArray = array_merge($reproductionArray, $additionalReproductionArray);
-            $this -> reproductionArray = ClassHelpers::unqualifyArray($reproductionArray);
+            $this -> reproductionArray = ArrayHelpers::unqualifyArray($reproductionArray);
         }
 
         public function __toString() 
