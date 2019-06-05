@@ -27,11 +27,11 @@ namespace Farmer\Herd {
         {
             $reproductionAmount = null;
             $reproductionArray = $animal2 -> getReproductionArray();
-            if(array_key_exists((string)$animal1, $reproductionArray)) {
+            if (array_key_exists((string)$animal1, $reproductionArray)) {
                 $reproductionAmount = $reproductionArray[(string)$animal1];
             }
 
-            if($reproductionAmount !== null) {
+            if ($reproductionAmount !== null) {
                 $this -> addAnimals($animal1, $reproductionAmount);
             } else {
                 $totalAnimal1Amount = $this -> getAnimalAmount($animal1) + 1;
@@ -58,21 +58,19 @@ namespace Farmer\Herd {
                 $rate = (int)round(1/$rate);
                 $this -> addAnimals($animal1, (-1) * $rate);
                 $this -> addAnimals($animal2, 1);
-                
             }
         }
 
         private function getDefenderAgainst($predator)
         {
             foreach ($this -> animals as $animal => $amount) {
-                if($amount > 0) {
+                if ($amount > 0) {
                     $className = "\Farmer\Animal\\".$animal;
                     $animalObject = new $className;
-                    if($animalObject instanceof \Farmer\Animal\Watchdog) {
-                        if(in_array((string)$predator, $animalObject -> getDefendAgainst())) {
+                    if ($animalObject instanceof \Farmer\Animal\Watchdog) {
+                        if (in_array((string)$predator, $animalObject -> getDefendAgainst())) {
                             return $animal;
                         }
-                        
                     }
                 }
             }
@@ -82,7 +80,7 @@ namespace Farmer\Herd {
         private function predatorAction($predator): void
         {
             foreach ($predator -> getTargetAnimals() as $key => $animal) {
-                if(array_key_exists($animal, $this -> animals)) {
+                if (array_key_exists($animal, $this -> animals)) {
                     $this -> animals[$animal] = 0;
                 }
             }
@@ -92,7 +90,7 @@ namespace Farmer\Herd {
         public function attack($predator)
         {
             $defender = $this -> getDefenderAgainst($predator);
-            if($defender === null) {
+            if ($defender === null) {
                 $this -> predatorAction($predator);
             } else {
                 $this -> addAnimals($defender, -1);
