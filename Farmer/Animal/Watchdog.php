@@ -6,7 +6,7 @@ namespace Farmer\Animal {
         //todo are names intuitive?
         public function __construct($exchangeArray, $defendAgainst) 
         {
-            $this -> defendAgainst = $this -> unqualifyArrayKeys($defendAgainst);
+            $this -> defendAgainst = $this -> unqualifyArray($defendAgainst);
             parent::__construct($exchangeArray);
         }
     }

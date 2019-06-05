@@ -2,12 +2,17 @@
 namespace Farmer\Animal {
     class Predator extends Animal
     {
-        public $targetAnimals = array();
+        private $targetAnimals = array();
         //todo are names intuitive?
         public function __construct($targetAnimals, $exchangeArray = null) 
         {
-            $this -> targetAnimals = $this -> unqualifyArrayKeys($targetAnimals);
+            $this -> targetAnimals = $this -> unqualifyArray($targetAnimals);
             parent::__construct($exchangeArray);
+        }
+
+        public function getTargetAnimals()
+        {
+            return $this -> targetAnimals;
         }
     }
 }

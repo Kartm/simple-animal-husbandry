@@ -15,10 +15,12 @@ namespace {
     use Farmer\Animal;
     use Farmer\Herd\Herd;
 
-    $herd = new Herd();
-    $herd->addAnimals(new Animal\Rabbit, 6);
-    $herd->exchange(new Animal\Rabbit, new Animal\Sheep);
-    var_dump($herd->getAnimals());
+    // $herd = new Herd();
+    // $herd->addAnimals(new Animal\Rabbit, 6);
+    // $herd->exchange(new Animal\Rabbit, new Animal\Sheep);
+    // //$herd->addAnimals(new Animal\BigDog, 1);
+    // $herd -> attack(new Animal\Wolf);
+    // var_dump($herd->getAnimals());
 
     // $herd = new Herd();
     // $herd->addAnimals(new Animal\Rabbit, 6);
@@ -91,14 +93,14 @@ namespace {
     // $herd->addAnimals(new Animal\Horse, 6);
     // $herd->attack(new Animal\Fox);
     // var_dump($herd->getAnimals());
-    // $herd = new Herd();
-    // $herd->addAnimals(new Animal\Rabbit, 6);
-    // $herd->addAnimals(new Animal\Sheep, 6);
-    // $herd->addAnimals(new Animal\Pig, 6);
-    // $herd->addAnimals(new Animal\Cow, 6);
-    // $herd->addAnimals(new Animal\Horse, 6);
-    // $herd->addAnimals(new Animal\Dog, 1);
-    // $herd->attack(new Animal\Wolf);
-    // var_dump($herd->getAnimals());
+    $herd = new Herd();
+    $herd->addAnimals(new Animal\Rabbit, 6);
+    $herd->addAnimals(new Animal\Sheep, 6);
+    $herd->addAnimals(new Animal\Pig, 6);
+    $herd->addAnimals(new Animal\Cow, 6);
+    $herd->addAnimals(new Animal\Horse, 6);
+    $herd->addAnimals(new Animal\Dog, 1);
+    $herd->attack(new Animal\Wolf);
+    var_dump($herd->getAnimals());
 
 }

@@ -59,17 +59,43 @@ namespace Farmer\Herd {
         //todo make animals have informations and features
         //todo ensure: THIS CLASS IS RESPONSIBLE FOR ALL RELATIONS AND INTERACTIONS
 
-        public function attack($animal)
+        //todo if returns null, move on
+        private function getDefenderAgainst($predator)
         {
-            switch ((string)$animal) {
-                case (string)new \Farmer\Animal\Fox: { 
-                    $this -> animals = \Farmer\Animal\Fox::action($this);
-                    break;
+            foreach ($this -> animals as $animal => $amount) {
+                if($amount > 0) {
+                    $className = "\Farmer\Animal\\".$animal;
+                    $animalObject = new $className;
+                    if($animalObject instanceof \Farmer\Animal\Watchdog) {
+                        //todo and in defendAgainst
+                        if(in_array((string)$predator, $animalObject -> defendAgainst)) {
+                            return $animal;
+                        }
+                        
+                    }
                 }
-                case (string)new \Farmer\Animal\Wolf: { 
-                    $this -> animals = \Farmer\Animal\Wolf::action($this);
-                    break;
+            }
+            return false;
+        }
+
+        //todo you better come up with a better name
+        private function predatorAction($predator): void
+        {
+            foreach ($predator -> getTargetAnimals() as $key => $value) {
+                if(array_key_exists($value, $this -> animals)) {
+                    $this -> animals[$value] = 0;
                 }
+            }
+            return;
+        }
+
+        public function attack($predator)
+        {
+            $defender = $this -> getDefenderAgainst($predator);
+            if($defender === false) {
+                $this -> predatorAction($predator);
+            } else {
+                $this -> addAnimals($defender, -1);
             }
         }
 
