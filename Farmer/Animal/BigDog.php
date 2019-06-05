@@ -1,11 +1,12 @@
 <?php
 namespace Farmer\Animal {
-    class BigDog extends \Farmer\Animal\Animal
+    class BigDog extends \Farmer\Animal\Watchdog
     {
         public function __construct() 
         {
             $exchangeArray = array(\Farmer\Animal\Cow::class => (double)(1));
-            parent::__construct($exchangeArray);
+            $defendAgainst = array(\Farmer\Animal\Wolf::class);
+            parent::__construct($exchangeArray, $defendAgainst);
         }
     }
 }

@@ -1,11 +1,12 @@
 <?php
 namespace Farmer\Animal {
     class Animal
-    {
-        //todo move exchangeArray here        
-        private function parseExchangeArray($exchangeArray) {
+    {     
+        protected function unqualifyArrayKeys($array) 
+        {
+            if($array === null) return $array;
             $result = array();
-            foreach ($exchangeArray as $key => $value) {
+            foreach ($array as $key => $value) {
                 $key = explode('\\', $key);
                 $key = end($key);
                 $result[$key] = $value;
@@ -17,10 +18,11 @@ namespace Farmer\Animal {
 
         public function __construct($exchangeArray = null) 
         {
-            $this -> exchangeArray = $this -> parseExchangeArray($exchangeArray);
+            $this -> exchangeArray = $this -> unqualifyArrayKeys($exchangeArray);
         }
 
-        public function __toString() {
+        public function __toString() 
+        {
             $partial = explode('\\', get_class($this));
             return end($partial);
         }
