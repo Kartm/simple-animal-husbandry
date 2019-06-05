@@ -4,7 +4,7 @@ namespace Farmer\Animal {
     {
         public function __construct() 
         {
-            $targetAnimals = array(\Farmer\Animal\Rabbit::class);
+            $targetAnimals = array(Rabbit::class);
             parent::__construct($targetAnimals);
         }
     }

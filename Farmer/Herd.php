@@ -26,9 +26,9 @@ namespace Farmer\Herd {
         public function reproduce($animal1, $animal2)
         {
             $reproductionAmount = null;
-
-            if(array_key_exists((string)$animal1, $animal2 -> reproductionArray)) {
-                $reproductionAmount = $animal2 -> reproductionArray[(string)$animal1];
+            $reproductionArray = $animal2 -> getReproductionArray();
+            if(array_key_exists((string)$animal1, $reproductionArray)) {
+                $reproductionAmount = $reproductionArray[(string)$animal1];
             }
 
             if($reproductionAmount !== null) {
@@ -48,7 +48,8 @@ namespace Farmer\Herd {
 
         public function exchange($animal1, $animal2)
         {
-            $rate = $animal1 -> exchangeArray[(string)$animal2];
+            $exchangeArray = $animal1 -> getExchangeArray();
+            $rate = $exchangeArray[(string)$animal2];
             if ($rate >= (double)(1)) {
                 $rate = (int)$rate;
                 $this -> addAnimals($animal1, -1);
@@ -68,7 +69,7 @@ namespace Farmer\Herd {
                     $className = "\Farmer\Animal\\".$animal;
                     $animalObject = new $className;
                     if($animalObject instanceof \Farmer\Animal\Watchdog) {
-                        if(in_array((string)$predator, $animalObject -> defendAgainst)) {
+                        if(in_array((string)$predator, $animalObject -> getDefendAgainst())) {
                             return $animal;
                         }
                         
@@ -80,9 +81,9 @@ namespace Farmer\Herd {
 
         private function predatorAction($predator): void
         {
-            foreach ($predator -> getTargetAnimals() as $key => $value) {
-                if(array_key_exists($value, $this -> animals)) {
-                    $this -> animals[$value] = 0;
+            foreach ($predator -> getTargetAnimals() as $key => $animal) {
+                if(array_key_exists($animal, $this -> animals)) {
+                    $this -> animals[$animal] = 0;
                 }
             }
             return;

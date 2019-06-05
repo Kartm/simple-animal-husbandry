@@ -3,8 +3,8 @@ namespace Farmer\Animal {
     use \Farmer\ArrayHelpers;
     class Animal
     {    
-        public $exchangeArray = array();
-        public $reproductionArray = array();
+        private $exchangeArray = array();
+        private $reproductionArray = array();
 
         public function __construct($exchangeArray = array(), $additionalReproductionArray = array()) 
         {
@@ -18,6 +18,16 @@ namespace Farmer\Animal {
         {
             $partial = explode('\\', get_class($this));
             return end($partial);
+        }
+
+        public function getExchangeArray()
+        {
+            return $this -> exchangeArray;
+        }
+
+        public function getReproductionArray()
+        {
+            return $this -> reproductionArray;
         }
     }
 }

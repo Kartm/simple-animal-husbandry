@@ -4,7 +4,7 @@ namespace Farmer\Animal {
     {
         public function __construct() 
         {
-            $exchangeArray = array(\Farmer\Animal\Sheep::class => (double)(1/6));
+            $exchangeArray = array(Sheep::class => (double)(1/6));
             parent::__construct($exchangeArray);
         }
     }
