@@ -214,5 +214,4 @@ class HerdTests extends PHPUnit\Framework\TestCase
         $expected["Dog"] = 1;
         $this->assertEquals($expected, $herd->getAnimals());
     }
- 
 }

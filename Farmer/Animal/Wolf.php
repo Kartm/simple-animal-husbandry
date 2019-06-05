@@ -2,7 +2,7 @@
 namespace Farmer\Animal {
     class Wolf extends \Farmer\Animal\Predator
     {
-        public function __construct() 
+        public function __construct()
         {
             $targetAnimals = array(BigDog::class,
             Cow::class,
